@@ -1,10 +1,16 @@
 #include "lib_uart.h"
 
-char arr_receive[100] = "";
-uint8_t count_arr_receive = 0;
-uint8_t flag_arr_receive = 0;
+char array_receive[100] = "";
+uint8_t count_array_receive = 0;
+uint8_t flag_array_receive = 0;
 
-void UART_Configuration(uint32_t select)
+/**
+ * @brief Ham cau hinh uart
+ * 
+ * @param baudrate 
+ */
+
+void UART_Configuration(uint32_t baudrate)
 { 
   CLK->CKDIVR = 0;
   CLK->PCKENR1 = 0xff;
@@ -35,7 +41,13 @@ void UART_Configuration(uint32_t select)
   enableInterrupts(); 
 }
 
-void UART_Send_Array(uint8_t* array, uint16_t length) 
+/**
+ * @brief Ham gui mang
+ * 
+ * @param array,length
+ */
+
+void UART_Send_Array (uint8_t* array, uint16_t length) 
 {
     for (uint16_t i = 0; i < length; i++) 
     {
@@ -44,18 +56,59 @@ void UART_Send_Array(uint8_t* array, uint16_t length)
     }
 }
 
-INTERRUPT_HANDLER(UART1_RX_IRQHandler,18)
+/**
+ * @brief Ham gui chuoi ky tu
+ * 
+ * @param *message
+ */
+
+void UART_Printf_String (char *message) 
+{
+  while (*message)																							
+  {
+    UART1_SendData8((unsigned char) *message);									
+    while (UART1_GetFlagStatus(UART1_FLAG_TXE) == RESET);	
+    message++;                               
+  }
+}
+
+/**
+ * @brief Ham ngat nhan chuoi ky tu
+ * 
+ */
+
+void UART_Interrupt_Receive_String()
 {
   char temp = UART1->DR;
   if(temp != '!')
   {
-    arr_receive[count_arr_receive] = temp;
-    count_arr_receive++;
+    array_receive[count_array_receive] = temp;
+    count_array_receive++;
   }
   else
   {
-    arr_receive[count_arr_receive] = 0;
-    count_arr_receive=0;
-    flag_arr_receive = 1;
+    array_receive[count_array_receive] = 0;
+    count_array_receive=0;
+    flag_array_receive = 1;
+  }
+}
+
+/**
+ * @brief Ham ngat nhan mang
+ * 
+ */
+
+void UART_Interrupt_Receive_Array(uint16_t length)
+{
+  char temp = UART1->DR;
+  if(count_array_receive < length)
+  {
+    array_receive[count_array_receive] = temp;
+    count_array_receive++;
+  }
+  else
+  {
+    count_array_receive=0;
+    flag_array_receive = 1;
   }
 }
