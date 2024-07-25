@@ -1641,12 +1641,6 @@
     <group>
         <name>Lib</name>
         <file>
-            <name>$PROJ_DIR$\lib_uart.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\lib_uart.h</name>
-        </file>
-        <file>
             <name>$PROJ_DIR$\..\..\Lib\STM8CONFIG.h</name>
         </file>
         <file>
@@ -1685,6 +1679,18 @@
     </group>
     <group>
         <name>User</name>
+        <file>
+            <name>$PROJ_DIR$\lib_convert.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\lib_convert.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\lib_uart.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\lib_uart.h</name>
+        </file>
         <file>
             <name>$PROJ_DIR$\main.c</name>
         </file>

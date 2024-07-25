@@ -20,16 +20,17 @@ rule browsedata
 
 
 #Build steps
-build lib_uart.pbi : index lib_uart.xcl
 build stm8s_clk.pbi : index stm8s_clk.xcl
 build stm8s_gpio.pbi : index stm8s_gpio.xcl
 build stm8s_it.pbi : index stm8s_it.xcl
 build stm8s_itc.pbi : index stm8s_itc.xcl
 build stm8s_uart1.pbi : index stm8s_uart1.xcl
+build lib_convert.pbi : index lib_convert.xcl
+build lib_uart.pbi : index lib_uart.xcl
 build main.pbi : index main.xcl
-build LIBRARY_STM8S_UART_part0.pbi : link lib_uart.pbi stm8s_clk.pbi stm8s_gpio.pbi
-build LIBRARY_STM8S_UART_part1.pbi : link stm8s_it.pbi stm8s_itc.pbi stm8s_uart1.pbi
-build LIBRARY_STM8S_UART_part2.pbi : link main.pbi
+build LIBRARY_STM8S_UART_part0.pbi : link stm8s_clk.pbi stm8s_gpio.pbi stm8s_it.pbi
+build LIBRARY_STM8S_UART_part1.pbi : link stm8s_itc.pbi stm8s_uart1.pbi lib_convert.pbi
+build LIBRARY_STM8S_UART_part2.pbi : link lib_uart.pbi main.pbi
 build LIBRARY_STM8S_UART.pbd : link LIBRARY_STM8S_UART_part0.pbi LIBRARY_STM8S_UART_part1.pbi LIBRARY_STM8S_UART_part2.pbi
 build LIBRARY_STM8S_UART.pbw : browsedata LIBRARY_STM8S_UART.pbd
 

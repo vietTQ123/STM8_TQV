@@ -1,10 +1,14 @@
-#include "lib_uart.h"
+#include <lib_uart.h>
 
+//uint16_t length;
 int new=1;
 int old=1; 
 
-uint8_t dataArray[] = {0x01, 0x02, 0x03, 0x04, 0x05};
-uint16_t dataLength = sizeof(dataArray) / sizeof(dataArray[0]);
+uint8_t dataArray[] = {0xAA,0x55,0x00,0x01,0x00,0x05,0x01,0x12,0x34};
+uint8_t dataArray2[] = {0xAA,0x55,0x00,0x01,0x00,0x09,0x01,0x12,0x34,0x05,0x01,0x12,0x34};
+uint8_t test[] = {0x34,0x55,0x00,0x01,0x00,0x09,0x01,0x12,0x34,0x05,0x01,0x12};
+uint16_t dataLength = 0;
+//uint16_t dataLength = sizeof(dataArray) / sizeof(dataArray[0]);
 
 void assert_failed(uint8_t* file, uint32_t line){}
 
@@ -20,34 +24,27 @@ void delay(int t)
 
 int main( void )
 {
-  GPIO_DeInit(GPIOD);
+  GPIO_DeInit(GPIOB);
 
-  GPIO_Init(GPIOD, GPIO_PIN_1, GPIO_MODE_OUT_PP_LOW_SLOW);  // LED 1
+  GPIO_Init(GPIOB, GPIO_PIN_5, GPIO_MODE_OUT_PP_LOW_SLOW);  // LED 1
   
   UART_Configuration(9600);
   
+  
+  
   while(1)
   {
-//slave
-    UART_Send_Array(dataArray, dataLength);
-
 //master
-//    if(flag_array_receive == 1)
-//    {
-//      flag_array_receive = 0;
-//      if(strcmp(array_receive,dataArray) == 0)
-//      {
-//        GPIO_WriteLow(GPIOD, GPIO_PIN_1);
-//        delay(1000);
-//        GPIO_WriteHigh(GPIOD, GPIO_PIN_1);
-//        delay(1000);
-//      }
-//    }
+        
+    UART_Time_Out();
+        
+    if(flag_array_receive == END_RECEIVE)
+    {
+      flag_array_receive = WAIT_RECEIVE;
+      UART_Send_Array(array_receive, ( 4 + Convert_From_Bytes_To_Uint16(array_receive[4], array_receive[5])));
+      
+    }
+    
+    delay(1);
   }
-}
-
-
-INTERRUPT_HANDLER(UART1_RX_IRQHandler,18)
-{
-  UART_Interrupt_Receive_Array(dataLength);
 }
